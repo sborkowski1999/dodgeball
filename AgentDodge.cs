@@ -196,7 +196,7 @@ public class AgentDodge : Agent
     /// <summary>
     /// Used to provide a "kick" to the ball.
     /// </summary>
-    void OnCollisionEnter(Collision c) //MAYBE NEED TO FIX??
+    void OnCollisionEnter(Collision c) //MAYBE NEED TO FIX?? SHOULD ONLY GIVE POINTS IF THE BALL IS NEUTRAL?
     {
         var force = k_Power * m_KickPower;
         /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
