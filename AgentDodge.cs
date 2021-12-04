@@ -19,7 +19,7 @@ public class AgentDodge : Agent
     // * own teammate
     // * opposing player
 
-    /*public enum Position
+    /*public enum Position // DONT NEED FOR DODGEBALL
     {
         Striker,
         Goalie,
@@ -73,7 +73,7 @@ public class AgentDodge : Agent
             initialPos = new Vector3(transform.position.x + 5f, .5f, transform.position.z);
             rotSign = -1f;
         }
-        /*if (position == Position.Goalie)
+        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
         {
             m_LateralSpeed = 1.0f;
             m_ForwardSpeed = 1.0f;
@@ -144,11 +144,11 @@ public class AgentDodge : Agent
             ForceMode.VelocityChange);
     }
 
-    public override void OnActionReceived(ActionBuffers actionBuffers) /////////// TO FIX
+    public override void OnActionReceived(ActionBuffers actionBuffers)
 
     {
 
-        /*if (position == Position.Goalie)
+        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
         {
             // Existential bonus for Goalies.
             AddReward(m_Existential);
@@ -196,10 +196,10 @@ public class AgentDodge : Agent
     /// <summary>
     /// Used to provide a "kick" to the ball.
     /// </summary>
-    void OnCollisionEnter(Collision c) //////////////// TO FIX
+    void OnCollisionEnter(Collision c) //MAYBE NEED TO FIX??
     {
         var force = k_Power * m_KickPower;
-        /*if (position == Position.Goalie)
+        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
         {
             force = k_Power;
         }*/
