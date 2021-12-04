@@ -101,11 +101,11 @@ public class DodgeEnvController : MonoBehaviour
 
     }
 
-    public void PlayerHit(Team scoredTeam, GameObject hitplayer) //////////////////////////////        TO FIX
+    public void PlayerHit(Team scoredTeam, GameObject hitplayer) // NEED TO FIX
     {
         if (scoredTeam == Team.Blue)
         {
-            m_BlueAgentGroup.AddGroupReward(1 - (float)m_ResetTimer / MaxEnvironmentSteps);
+            m_BlueAgentGroup.AddGroupReward(1 - (float)m_ResetTimer / MaxEnvironmentSteps); // should the reward be given when hit, or when game is over?
             m_PurpleAgentGroup.AddGroupReward(-1);
             bluescore++;
         }
@@ -117,7 +117,7 @@ public class DodgeEnvController : MonoBehaviour
         }
         hitplayer.SetActive(false);
 
-        if(bluescore == 2 || purplescore == 2)
+        if(bluescore == 2 || purplescore == 2) // how should the game actually end?
         {
             m_PurpleAgentGroup.EndGroupEpisode();
             m_BlueAgentGroup.EndGroupEpisode();
