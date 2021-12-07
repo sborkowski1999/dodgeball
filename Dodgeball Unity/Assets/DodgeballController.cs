@@ -48,6 +48,7 @@ public class DodgeballController : MonoBehaviour
             }else if(curr_state == ball_state.neutral)
             {
                 curr_state = ball_state.blue;
+                GetComponent<Renderer>().material = blueMaterial;
             }
         }
         else if (col.gameObject.CompareTag(wall) || col.gameObject.CompareTag(ball))
@@ -56,4 +57,6 @@ public class DodgeballController : MonoBehaviour
             GetComponent<Renderer>().material = neutralMat;
         }
     }
+
+    
 }

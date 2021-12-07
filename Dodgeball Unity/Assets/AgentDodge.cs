@@ -19,13 +19,6 @@ public class AgentDodge : Agent
     // * own teammate
     // * opposing player
 
-    /*public enum Position // DONT NEED FOR DODGEBALL
-    {
-        Striker,
-        Goalie,
-        Generic
-    }*/
-
     [HideInInspector]
     public DodgeballTeam team;
     float m_KickPower;
@@ -73,23 +66,8 @@ public class AgentDodge : Agent
             initialPos = new Vector3(transform.position.x + 5f, .5f, transform.position.z);
             rotSign = -1f;
         }
-        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
-        {
-            m_LateralSpeed = 1.0f;
-            m_ForwardSpeed = 1.0f;
-        }
-        else if (position == Position.Striker)
-        {
-            m_LateralSpeed = 0.3f;
-            m_ForwardSpeed = 1.3f;
-        }
-        else
-        {
-            m_LateralSpeed = 0.3f;
-            m_ForwardSpeed = 1.0f;
-        }*/
-        m_LateralSpeed = 0.3f;
-        m_ForwardSpeed = 1.0f;
+        m_LateralSpeed = 0.2f;
+        m_ForwardSpeed = 0.2f;
         m_DodgeSettings = FindObjectOfType<DodgeSettings>();
         agentRb = GetComponent<Rigidbody>();
         agentRb.maxAngularVelocity = 500;

@@ -32,12 +32,15 @@ public class DodgeEnvController : MonoBehaviour
     /// </summary>
 
     public GameObject ball;
+    //Need this to reset ball color on game reset.
+    public Material neutralMaterial;
     [HideInInspector]
     public Rigidbody ballRb;
     Vector3 m_BallStartingPos;
 
     //List of Agents On Platform
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
+    private List<GameObject> outAgents = new List<GameObject>();
 
     private DodgeSettings m_DodgeSettings;
 
@@ -52,7 +55,6 @@ public class DodgeEnvController : MonoBehaviour
 
     void Start()
     {
-
         m_DodgeSettings = FindObjectOfType<DodgeSettings>();
         // Initialize TeamManager
         m_BlueAgentGroup = new SimpleMultiAgentGroup();
@@ -98,10 +100,10 @@ public class DodgeEnvController : MonoBehaviour
         ball.transform.position = m_BallStartingPos + new Vector3(randomPosX, 0f, randomPosZ);
         ballRb.velocity = Vector3.zero;
         ballRb.angularVelocity = Vector3.zero;
-
+        ball.GetComponent<Renderer>().material = neutralMaterial;
     }
 
-    public void PlayerHit(DodgeballTeam scoredTeam, GameObject hitplayer) // NEED TO FIX
+    public void PlayerHit(DodgeballTeam scoredTeam, GameObject hitplayer)
     {
         if (scoredTeam == DodgeballTeam.Blue)
         {
@@ -116,16 +118,17 @@ public class DodgeEnvController : MonoBehaviour
             purplescore++;
         }
         hitplayer.SetActive(false);
+        outAgents.Add(hitplayer);
 
-        if(bluescore == 2 || purplescore == 2) // how should the game actually end?
+        if(bluescore == 2 || purplescore == 2)
         {
+            bluescore = 0;
+            purplescore = 0;
             m_PurpleAgentGroup.EndGroupEpisode();
             m_BlueAgentGroup.EndGroupEpisode();
             ResetScene();
         }
     }
-
-
     public void ResetScene()
     {
         m_ResetTimer = 0;
@@ -133,16 +136,16 @@ public class DodgeEnvController : MonoBehaviour
         //Reset Agents
         foreach (var item in AgentsList)
         {
-            var randomPosX = Random.Range(-5f, 5f);
-            var newStartPos = item.Agent.initialPos + new Vector3(randomPosX, 0f, 0f);
-            var rot = item.Agent.rotSign * Random.Range(80.0f, 100.0f);
-            var newRot = Quaternion.Euler(0, rot, 0);
-            item.Agent.transform.SetPositionAndRotation(newStartPos, newRot);
-
+            item.Agent.transform.position = item.StartingPos;
+            item.Agent.transform.rotation = item.StartingRot;
             item.Rb.velocity = Vector3.zero;
             item.Rb.angularVelocity = Vector3.zero;
         }
 
+        foreach (GameObject agent in outAgents) {
+            agent.SetActive(true);
+        }
+        outAgents.Clear();
         //Reset Ball
         ResetBall();
     }
