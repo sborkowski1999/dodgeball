@@ -1,4 +1,18 @@
 # Dodgeball
+**Dec 6 12:30pm**
+
+*Still To Do*
+
+- Add multiple balls.
+- Need to add an invisible wall halfway to stop agents crossing halfway point but ball should be allowed through.
+
+*Changes*
+
+-Walls are now invisible
+
+</br>
+
+
 **Dec 6 11:30pm**
 
 *Still To Do*
