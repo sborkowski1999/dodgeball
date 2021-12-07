@@ -4,6 +4,7 @@
 *Still To Do*
 
 - Need to add an invisible wall halfway to stop agents crossing halfway point but ball should be allowed through.
+- Fix random generation of player and ball spawn locations
 
 *Changes*
 
