@@ -8,7 +8,7 @@
 
 *Changes*
 
--Now there are multiple balls
+- Now there are multiple balls
 
 </br>
 
@@ -23,7 +23,7 @@
 
 *Changes*
 
--Walls are now invisible
+- Walls are now invisible
 
 </br>
 
