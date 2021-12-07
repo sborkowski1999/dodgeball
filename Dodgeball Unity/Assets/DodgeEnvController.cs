@@ -41,6 +41,7 @@ public class DodgeEnvController : MonoBehaviour
     //List of Agents On Platform
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
     private List<GameObject> outAgents = new List<GameObject>();
+    public List<GameObject> balls = new List<GameObject>();
 
     private DodgeSettings m_DodgeSettings;
 
@@ -147,6 +148,9 @@ public class DodgeEnvController : MonoBehaviour
         }
         outAgents.Clear();
         //Reset Ball
-        ResetBall();
+        foreach(var item in balls)
+        {
+            ResetBall();
+        }
     }
 }
