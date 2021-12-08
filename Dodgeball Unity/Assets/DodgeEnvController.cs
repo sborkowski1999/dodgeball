@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
-
 public class DodgeEnvController : MonoBehaviour
 {
     [System.Serializable]
@@ -31,28 +30,23 @@ public class DodgeEnvController : MonoBehaviour
     /// We will be changing the ground material based on success/failue
     /// </summary>
 
-    public GameObject ball;
-    //Need this to reset ball color on game reset.
-    public Material neutralMaterial;
     [HideInInspector]
-    public Rigidbody ballRb;
-    Vector3 m_BallStartingPos;
 
     //List of Agents On Platform
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
-    private List<GameObject> outAgents = new List<GameObject>();
+    private List<GameObject> outAgents = new List<GameObject>(); //Keep track of which agents are out to add them again after reset.
     public List<GameObject> balls = new List<GameObject>();
+    public StageColor stageColorer;
 
     private DodgeSettings m_DodgeSettings;
-
 
     private SimpleMultiAgentGroup m_BlueAgentGroup;
     private SimpleMultiAgentGroup m_PurpleAgentGroup;
 
     private int m_ResetTimer;
 
-    private int bluescore;
-    private int purplescore;
+    private int bluescore = 0;
+    private int purplescore = 0;
 
     void Start()
     {
@@ -60,10 +54,8 @@ public class DodgeEnvController : MonoBehaviour
         // Initialize TeamManager
         m_BlueAgentGroup = new SimpleMultiAgentGroup();
         m_PurpleAgentGroup = new SimpleMultiAgentGroup();
-        ballRb = ball.GetComponent<Rigidbody>();
-        m_BallStartingPos = new Vector3(ball.transform.position.x, ball.transform.position.y, ball.transform.position.z);
-        bluescore = 0;
-        purplescore = 0;
+
+        //Save agents starting position and rotation for resetting later. Also set their team.
         foreach (var item in AgentsList)
         {
             item.StartingPos = item.Agent.transform.position;
@@ -93,15 +85,14 @@ public class DodgeEnvController : MonoBehaviour
     }
 
 
-    public void ResetBall()
+    public void ResetBalls()
     {
-        var randomPosX = Random.Range(-2.5f, 2.5f);
-        var randomPosZ = Random.Range(-2.5f, 2.5f);
-
-        ball.transform.position = m_BallStartingPos + new Vector3(randomPosX, 0f, randomPosZ);
-        ballRb.velocity = Vector3.zero;
-        ballRb.angularVelocity = Vector3.zero;
-        ball.GetComponent<Renderer>().material = neutralMaterial;
+        foreach (GameObject ball in balls) {
+            ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.neutral);
+            ball.transform.localPosition = ball.GetComponent<Dodgeball>().startingPosition;
+        }
     }
 
     public void PlayerHit(DodgeballTeam scoredTeam, GameObject hitplayer)
@@ -123,6 +114,7 @@ public class DodgeEnvController : MonoBehaviour
 
         if(bluescore == 2 || purplescore == 2)
         {
+            stageColorer.SetWinner(bluescore == 2 ? StageColor.DodgeballWinner.blue : StageColor.DodgeballWinner.purple);
             bluescore = 0;
             purplescore = 0;
             m_PurpleAgentGroup.EndGroupEpisode();
@@ -142,15 +134,13 @@ public class DodgeEnvController : MonoBehaviour
             item.Rb.velocity = Vector3.zero;
             item.Rb.angularVelocity = Vector3.zero;
         }
-
         foreach (GameObject agent in outAgents) {
             agent.SetActive(true);
         }
         outAgents.Clear();
-        //Reset Ball
-        foreach(var item in balls)
-        {
-            ResetBall();
-        }
+        /*When last agent gets hit and dies, it still imparts force on ball. Adding 0.1 seconds of delay 
+        here means we wait for the force to be over and then stop momentum in ResetBalls method. 
+        Otherwise ResetBalls wouldn't have any affect.*/
+        Invoke("ResetBalls",0.1f);
     }
 }

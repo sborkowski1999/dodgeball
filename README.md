@@ -1,5 +1,16 @@
 # Dodgeball
-**Dec 7 11:30pm**
+***
+
+**Dec 7 8pm**
+
+*Changes*
+- Added an invisible wall in the middle that blocks agents but allows balls through. This should keep agents to their respective sides.
+- Fixed bug where balls would keep moving after a game ended and their position was reset.
+- Added effect to change game floor color when one team wins or looses. <- Feel free to delete this is this is distracting.
+
+</br></br>
+
+**Dec 7 11:30am**
 
 *Still To Do*
 
@@ -10,7 +21,7 @@
 
 - Now there are multiple balls
 
-</br>
+</br></br>
 
 
 
@@ -25,7 +36,7 @@
 
 - Walls are now invisible
 
-</br>
+</br></br>
 
 
 **Dec 6 11:30pm**
@@ -45,7 +56,7 @@
 
 
 
-</br>
+</br></br>
 
 **Dec 6, 2:30**
 
