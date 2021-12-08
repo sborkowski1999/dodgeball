@@ -1,7 +1,7 @@
 # Dodgeball
 ***
 
-**Dec 7 8pm**
+**Dec 7th, 8pm**
 
 *Changes*
 - Added an invisible wall in the middle that blocks agents but allows balls through. This should keep agents to their respective sides.
