@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
+using System.Linq;
 public class DodgeEnvController : MonoBehaviour
 {
     [System.Serializable]
@@ -35,6 +36,7 @@ public class DodgeEnvController : MonoBehaviour
     //List of Agents On Platform
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
     private List<GameObject> outAgents = new List<GameObject>(); //Keep track of which agents are out to add them again after reset.
+    public List<GameObject> newBallList = new List<GameObject>();
     public List<GameObject> balls = new List<GameObject>();
     public StageColor stageColorer;
 
@@ -43,10 +45,12 @@ public class DodgeEnvController : MonoBehaviour
     private SimpleMultiAgentGroup m_BlueAgentGroup;
     private SimpleMultiAgentGroup m_PurpleAgentGroup;
 
-    private int m_ResetTimer;
+    public int m_ResetTimer;
 
     private int bluescore = 0;
     private int purplescore = 0;
+
+    public AgentDodge ad;
 
     void Start()
     {
@@ -88,10 +92,16 @@ public class DodgeEnvController : MonoBehaviour
     public void ResetBalls()
     {
         foreach (GameObject ball in balls) {
+            ball.SetActive(true);
             ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
             ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.neutral);
             ball.transform.localPosition = ball.GetComponent<Dodgeball>().startingPosition;
+        }
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("ball")) {
+            if (obj.name == "Ball(Clone)") {
+                Destroy(obj);
+            }
         }
     }
 
@@ -126,6 +136,8 @@ public class DodgeEnvController : MonoBehaviour
     {
         m_ResetTimer = 0;
 
+        
+
         //Reset Agents
         foreach (var item in AgentsList)
         {
@@ -143,4 +155,5 @@ public class DodgeEnvController : MonoBehaviour
         Otherwise ResetBalls wouldn't have any affect.*/
         Invoke("ResetBalls",0.1f);
     }
+
 }

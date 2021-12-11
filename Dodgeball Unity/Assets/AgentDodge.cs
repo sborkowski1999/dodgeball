@@ -41,6 +41,14 @@ public class AgentDodge : Agent
 
     EnvironmentParameters m_ResetParams;
 
+    public GameObject grabbedObject;
+    public float grabbedObjectSize;
+    public int inventory;
+
+    public GameObject projectile;
+    public float launchVelocity = 10f;
+    public DodgeEnvController envController;
+
     public override void Initialize()
     {
         DodgeEnvController envController = GetComponentInParent<DodgeEnvController>();
@@ -73,7 +81,9 @@ public class AgentDodge : Agent
         agentRb.maxAngularVelocity = 500;
 
         m_ResetParams = Academy.Instance.EnvironmentParameters;
+        inventory = 0;
     }
+
 
     public void MoveAgent(ActionSegment<int> act)
     {
@@ -85,6 +95,7 @@ public class AgentDodge : Agent
         var forwardAxis = act[0];
         var rightAxis = act[1];
         var rotateAxis = act[2];
+        var shoot = act[3];
 
         switch (forwardAxis)
         {
@@ -114,6 +125,13 @@ public class AgentDodge : Agent
                 break;
             case 2:
                 rotateDir = transform.up * 1f;
+                break;
+        }
+
+        switch (shoot)
+        {
+            case 1:
+                shootball();
                 break;
         }
 
@@ -170,6 +188,10 @@ public class AgentDodge : Agent
         {
             discreteActionsOut[1] = 2;
         }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            discreteActionsOut[3] =1;
+        }
     }
     /// <summary>
     /// Used to provide a "kick" to the ball.
@@ -181,18 +203,60 @@ public class AgentDodge : Agent
         {
             force = k_Power;
         }*/
+
         if (c.gameObject.CompareTag("ball"))
         {
             AddReward(.2f * m_BallTouch);
-            var dir = c.contacts[0].point - transform.position;
-            dir = dir.normalized;
-            c.gameObject.GetComponent<Rigidbody>().AddForce(dir * force);
+            if (c.gameObject.GetComponent<Dodgeball>().canpickup == 1)
+            {
+                pickupball(c.gameObject);
+            }
+            // var dir = c.contacts[0].point - transform.position;
+            // dir = dir.normalized;
+            // c.gameObject.GetComponent<Rigidbody>().AddForce(dir * force);
         }
     }
 
     public override void OnEpisodeBegin()
     {
         m_BallTouch = m_ResetParams.GetWithDefault("ball_touch", 0);
+    }
+
+    void pickupball(GameObject grabObject)
+    {
+        grabbedObject = grabObject;
+        grabbedObjectSize = grabbedObject.GetComponent<Renderer>().bounds.size.magnitude;
+
+        if (grabbedObject != null) {
+            grabbedObject.SetActive(false);
+            inventory++;
+        }
+    }
+
+    void shootball()
+    {
+        if (inventory == 0) {
+            return;
+        }
+        var ball = Instantiate(projectile, transform.position+(transform.forward*2), transform.rotation);
+        
+        ball.GetComponent<Rigidbody>().AddRelativeForce(new Vector3 (0, 0, 4000f));
+        ball.GetComponent<Dodgeball>().area = (GameObject.Find("Game Environment"));
+        if (gameObject.tag == "blueAgent")
+        {
+            ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.blue);
+        }
+        else if (gameObject.tag == "purpleAgent")
+        {
+            ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.purple);
+        }
+        
+        inventory--;
+    }
+
+    void resetInventory()
+    {
+        inventory = 0;
     }
 
 }

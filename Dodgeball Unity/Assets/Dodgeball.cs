@@ -21,17 +21,25 @@ public class Dodgeball : MonoBehaviour
     public string wall;
     public string ball;
     public Vector3 startingPosition; //Start position is saved for when game is reset..
+    public int canpickup = 1;
+
 
     void Start()
     {
         envController = area.GetComponent<DodgeEnvController>();
-        curr_state = BallState.neutral;
+        // curr_state = BallState.neutral;
         startingPosition = this.transform.localPosition;
+    }
+
+    void Update() { 
+        if (GetComponent<Rigidbody>().velocity.magnitude < 2.5) {
+            SetState(BallState.neutral);
+        }
     }
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.CompareTag(purpleAgent)) //ball touched purple agent.
+        if (col.gameObject.CompareTag("purpleAgent")) //ball touched purple agent.
         {
             if(curr_state == BallState.blue) {
                 envController.PlayerHit(DodgeballTeam.Blue, col.gameObject);
@@ -41,8 +49,9 @@ public class Dodgeball : MonoBehaviour
             }
         }
 
-        else if (col.gameObject.CompareTag(blueAgent)) //ball touched blue agent.
+        else if (col.gameObject.CompareTag("blueAgent")) //ball touched blue agent.
         {
+
             if(curr_state == BallState.purple){
                 envController.PlayerHit(DodgeballTeam.Purple, col.gameObject);
             }
@@ -50,7 +59,7 @@ public class Dodgeball : MonoBehaviour
                 SetState(BallState.blue);
             }
         }
-        else if (col.gameObject.CompareTag(wall) || col.gameObject.CompareTag(ball)) //ball touched wall.
+        else if (col.gameObject.CompareTag(wall)) //ball touched wall.
         {
             SetState(BallState.neutral);
         }
@@ -62,14 +71,17 @@ public class Dodgeball : MonoBehaviour
             case BallState.blue:
                 curr_state = BallState.blue;
                 GetComponent<Renderer>().material = blueMaterial;
+                canpickup = 0;
                 break;
             case BallState.purple:
                 curr_state = BallState.purple;
                 GetComponent<Renderer>().material = purpleMaterial;
+                canpickup = 0;
                 break;
             case BallState.neutral:
                 curr_state = BallState.neutral;
                 GetComponent<Renderer>().material = neutralMat;
+                canpickup = 1;
                 break;
         }
     }
