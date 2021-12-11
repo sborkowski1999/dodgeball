@@ -1,6 +1,21 @@
 # Dodgeball
 ***
 
+**Dec 10th, 9pm**
+
+*Changes*
+- Added agent features pickup and shoot balls in inventory
+- Ball is picked up when in contact with agent and if the ball is in neutral state
+- Ball is shot using SPACE when inventory != 0
+- Ball is now set to neutral if ball.velocity.magnitude is less than 2
+- Cloned ball from instantiate are removed when reset scene
+
+*To do*
+- Add reward system to new features
+
+</br></br>
+
+
 **Dec 7th, 8pm**
 
 *Changes*
