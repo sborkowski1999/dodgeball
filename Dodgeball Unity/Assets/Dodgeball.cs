@@ -23,6 +23,7 @@ public class Dodgeball : MonoBehaviour
     public Vector3 startingPosition; //Start position is saved for when game is reset.
     public int canpickup = 1;
 
+    public GameObject owner;
 
     void Start()
     {
@@ -40,9 +41,11 @@ public class Dodgeball : MonoBehaviour
         {
             if(curr_state == BallState.blue) {
                 envController.PlayerHit(DodgeballTeam.Blue, col.gameObject);
+                owner.GetComponent<AgentDodge>().AddReward(1);
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.purple);
+                owner = col.gameObject; // associate the ball with the agent that touched the ball
             }
         }
 
@@ -50,10 +53,12 @@ public class Dodgeball : MonoBehaviour
         {
 
             if(curr_state == BallState.purple){
+                owner.GetComponent<AgentDodge>().AddReward(1);
                 envController.PlayerHit(DodgeballTeam.Purple, col.gameObject);
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.blue);
+                owner = col.gameObject; // associate the ball with the agent that touched the ball
             }
         }
         else if (col.gameObject.CompareTag(wall)) //ball touched wall.
