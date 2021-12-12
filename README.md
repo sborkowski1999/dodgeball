@@ -1,5 +1,20 @@
 # Dodgeball
-***
+
+**Dec 12th, 1am**
+
+*Side Note*
+- It looks like we have the behaviour paramters' actions for movement encoded as discrete branches. Should those be continuous instead? In this (https://www.youtube.com/watch?v=zPFU30tbyKs) video, the guy makes movement actions continuous. If discrete is already working then no need to change this.
+
+
+*Changes*
+- Updated "Game Environment" Prefab to match our recent changes. Should hopefully help centralize changes for ML training.
+- Made middle invisible wall smaller.
+- Fixed bug where couldn't pickup balls after game restarted.
+
+*To do*
+- Add reward system to new features
+
+</br></br>
 
 **Dec 10th, 9pm**
 

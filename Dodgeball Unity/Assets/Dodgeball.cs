@@ -6,8 +6,7 @@ public class Dodgeball : MonoBehaviour
     [HideInInspector]
     public DodgeEnvController envController;
     [HideInInspector]
-    public enum BallState
-    {
+    public enum BallState{
         neutral = 0,
         purple = 1,
         blue = 2
@@ -20,7 +19,8 @@ public class Dodgeball : MonoBehaviour
     public string blueAgent; //will be used to check if collided with blue goal
     public string wall;
     public string ball;
-    public Vector3 startingPosition; //Start position is saved for when game is reset..
+    [HideInInspector]
+    public Vector3 startingPosition; //Start position is saved for when game is reset.
     public int canpickup = 1;
 
 
@@ -32,9 +32,6 @@ public class Dodgeball : MonoBehaviour
     }
 
     void Update() { 
-        if (GetComponent<Rigidbody>().velocity.magnitude < 2.5) {
-            SetState(BallState.neutral);
-        }
     }
 
     void OnCollisionEnter(Collision col)

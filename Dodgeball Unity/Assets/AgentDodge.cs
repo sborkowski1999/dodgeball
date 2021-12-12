@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
+using System.Collections.Generic;
 
 public enum DodgeballTeam
 {
@@ -42,10 +43,8 @@ public class AgentDodge : Agent
     EnvironmentParameters m_ResetParams;
 
     public GameObject grabbedObject;
-    public float grabbedObjectSize;
-    public int inventory;
+    private Stack<GameObject> inventory = new Stack<GameObject>();
 
-    public GameObject projectile;
     public float launchVelocity = 10f;
     public DodgeEnvController envController;
 
@@ -81,7 +80,7 @@ public class AgentDodge : Agent
         agentRb.maxAngularVelocity = 500;
 
         m_ResetParams = Academy.Instance.EnvironmentParameters;
-        inventory = 0;
+        inventory.Clear();
     }
 
 
@@ -136,24 +135,12 @@ public class AgentDodge : Agent
         }
 
         transform.Rotate(rotateDir, Time.deltaTime * 100f);
-        agentRb.AddForce(dirToGo * m_DodgeSettings.agentRunSpeed,
-            ForceMode.VelocityChange);
+        agentRb.AddForce(dirToGo * m_DodgeSettings.agentRunSpeed, ForceMode.VelocityChange);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
 
     {
-
-        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
-        {
-            // Existential bonus for Goalies.
-            AddReward(m_Existential);
-        }
-        else if (position == Position.Striker)
-        {
-            // Existential penalty for Strikers
-            AddReward(-m_Existential);
-        }*/
         AddReward(-m_Existential);
         MoveAgent(actionBuffers.DiscreteActions);
     }
@@ -193,17 +180,10 @@ public class AgentDodge : Agent
             discreteActionsOut[3] =1;
         }
     }
-    /// <summary>
-    /// Used to provide a "kick" to the ball.
-    /// </summary>
-    void OnCollisionEnter(Collision c) //MAYBE NEED TO FIX?? SHOULD ONLY GIVE POINTS IF THE BALL IS NEUTRAL?
+
+    void OnCollisionEnter(Collision c)
     {
         var force = k_Power * m_KickPower;
-        /*if (position == Position.Goalie) // DONT NEED FOR DODGEBALL
-        {
-            force = k_Power;
-        }*/
-
         if (c.gameObject.CompareTag("ball"))
         {
             AddReward(.2f * m_BallTouch);
@@ -211,9 +191,6 @@ public class AgentDodge : Agent
             {
                 pickupball(c.gameObject);
             }
-            // var dir = c.contacts[0].point - transform.position;
-            // dir = dir.normalized;
-            // c.gameObject.GetComponent<Rigidbody>().AddForce(dir * force);
         }
     }
 
@@ -222,23 +199,23 @@ public class AgentDodge : Agent
         m_BallTouch = m_ResetParams.GetWithDefault("ball_touch", 0);
     }
 
-    void pickupball(GameObject grabObject)
+    public void pickupball(GameObject grabbedObject)
     {
-        grabbedObject = grabObject;
-        grabbedObjectSize = grabbedObject.GetComponent<Renderer>().bounds.size.magnitude;
-
         if (grabbedObject != null) {
             grabbedObject.SetActive(false);
-            inventory++;
+            inventory.Push(grabbedObject);
         }
     }
 
-    void shootball()
+    public void shootball()
     {
-        if (inventory == 0) {
+        if (inventory.Count == 0) {
             return;
         }
-        var ball = Instantiate(projectile, transform.position+(transform.forward*2), transform.rotation);
+        var ball = inventory.Pop();
+        ball.SetActive(true);
+        ball.transform.position = this.transform.position+(transform.forward*2);
+        ball.transform.rotation = this.transform.rotation;
         
         ball.GetComponent<Rigidbody>().AddRelativeForce(new Vector3 (0, 0, 4000f));
         ball.GetComponent<Dodgeball>().area = (GameObject.Find("Game Environment"));
@@ -250,13 +227,10 @@ public class AgentDodge : Agent
         {
             ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.purple);
         }
-        
-        inventory--;
     }
 
-    void resetInventory()
+    public void resetInventory()
     {
-        inventory = 0;
+        inventory.Clear();
     }
-
 }

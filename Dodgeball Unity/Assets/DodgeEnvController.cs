@@ -23,24 +23,12 @@ public class DodgeEnvController : MonoBehaviour
     /// <returns></returns>
     [Tooltip("Max Environment Steps")] public int MaxEnvironmentSteps = 25000;
 
-    /// <summary>
-    /// The area bounds.
-    /// </summary>
-
-    /// <summary>
-    /// We will be changing the ground material based on success/failue
-    /// </summary>
-
-    [HideInInspector]
 
     //List of Agents On Platform
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
     private List<GameObject> outAgents = new List<GameObject>(); //Keep track of which agents are out to add them again after reset.
-    public List<GameObject> newBallList = new List<GameObject>();
     public List<GameObject> balls = new List<GameObject>();
     public StageColor stageColorer;
-
-    private DodgeSettings m_DodgeSettings;
 
     private SimpleMultiAgentGroup m_BlueAgentGroup;
     private SimpleMultiAgentGroup m_PurpleAgentGroup;
@@ -50,11 +38,8 @@ public class DodgeEnvController : MonoBehaviour
     private int bluescore = 0;
     private int purplescore = 0;
 
-    public AgentDodge ad;
-
     void Start()
     {
-        m_DodgeSettings = FindObjectOfType<DodgeSettings>();
         // Initialize TeamManager
         m_BlueAgentGroup = new SimpleMultiAgentGroup();
         m_PurpleAgentGroup = new SimpleMultiAgentGroup();
@@ -88,7 +73,6 @@ public class DodgeEnvController : MonoBehaviour
         }
     }
 
-
     public void ResetBalls()
     {
         foreach (GameObject ball in balls) {
@@ -96,12 +80,8 @@ public class DodgeEnvController : MonoBehaviour
             ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
             ball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             ball.GetComponent<Dodgeball>().SetState(Dodgeball.BallState.neutral);
+            ball.GetComponent<Dodgeball>().canpickup = 1;
             ball.transform.localPosition = ball.GetComponent<Dodgeball>().startingPosition;
-        }
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("ball")) {
-            if (obj.name == "Ball(Clone)") {
-                Destroy(obj);
-            }
         }
     }
 
@@ -122,9 +102,9 @@ public class DodgeEnvController : MonoBehaviour
         hitplayer.SetActive(false);
         outAgents.Add(hitplayer);
 
-        if(bluescore == 2 || purplescore == 2)
+        if(bluescore >=2 || purplescore >= 2)
         {
-            stageColorer.SetWinner(bluescore == 2 ? StageColor.DodgeballWinner.blue : StageColor.DodgeballWinner.purple);
+            stageColorer.SetWinner(bluescore >= 2 ? StageColor.DodgeballWinner.blue : StageColor.DodgeballWinner.purple);
             bluescore = 0;
             purplescore = 0;
             m_PurpleAgentGroup.EndGroupEpisode();
@@ -134,10 +114,7 @@ public class DodgeEnvController : MonoBehaviour
     }
     public void ResetScene()
     {
-        m_ResetTimer = 0;
-
-        
-
+        m_ResetTimer = 0;        
         //Reset Agents
         foreach (var item in AgentsList)
         {
@@ -145,6 +122,7 @@ public class DodgeEnvController : MonoBehaviour
             item.Agent.transform.rotation = item.StartingRot;
             item.Rb.velocity = Vector3.zero;
             item.Rb.angularVelocity = Vector3.zero;
+            item.Agent.resetInventory();
         }
         foreach (GameObject agent in outAgents) {
             agent.SetActive(true);
