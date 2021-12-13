@@ -23,7 +23,7 @@ public class Dodgeball : MonoBehaviour
     public Vector3 startingPosition; //Start position is saved for when game is reset.
     public int canpickup = 1;
 
-    public GameObject owner;
+    public AgentDodge ownerAgent;
 
     void Start()
     {
@@ -41,12 +41,15 @@ public class Dodgeball : MonoBehaviour
         {
             if(curr_state == BallState.blue) {
                 envController.PlayerHit(DodgeballTeam.Blue, col.gameObject);
-                owner.GetComponent<AgentDodge>().AddReward(1);
-                owner = null;
+                if (ownerAgent != null)
+                {
+                    ownerAgent.AddReward(1.0f);
+                } 
+                ownerAgent = null;
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.purple);
-                owner = col.gameObject; // associate the ball with the agent that touched the ball
+                ownerAgent = col.gameObject.GetComponent<AgentDodge>(); // associate the ball with the agent that touched the ball
             }
         }
 
@@ -55,12 +58,15 @@ public class Dodgeball : MonoBehaviour
 
             if(curr_state == BallState.purple){
                 envController.PlayerHit(DodgeballTeam.Purple, col.gameObject);
-                owner.GetComponent<AgentDodge>().AddReward(1);
-                owner = null;
+                if (ownerAgent != null)
+                {
+                    ownerAgent.AddReward(1.0f);
+                }
+                ownerAgent = null;
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.blue);
-                owner = col.gameObject; // associate the ball with the agent that touched the ball
+                ownerAgent = col.gameObject.GetComponent<AgentDodge>(); // associate the ball with the agent that touched the ball
             }
         }
         else if (col.gameObject.CompareTag(wall)) //ball touched wall.
