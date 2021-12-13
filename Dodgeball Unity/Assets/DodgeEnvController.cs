@@ -89,14 +89,10 @@ public class DodgeEnvController : MonoBehaviour
     {
         if (scoredTeam == DodgeballTeam.Blue)
         {
-            m_BlueAgentGroup.AddGroupReward(1 - (float)m_ResetTimer / MaxEnvironmentSteps); // should the reward be given when hit, or when game is over?
-            m_PurpleAgentGroup.AddGroupReward(-1);
             bluescore++;
         }
         else
         {
-            m_PurpleAgentGroup.AddGroupReward(1 - (float)m_ResetTimer / MaxEnvironmentSteps);
-            m_BlueAgentGroup.AddGroupReward(-1);
             purplescore++;
         }
         hitplayer.SetActive(false);

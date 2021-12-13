@@ -28,7 +28,6 @@ public class AgentDodge : Agent
     //public Position position;
 
     const float k_Power = 2000f;
-    float m_Existential;
     float m_LateralSpeed;
     float m_ForwardSpeed;
 
@@ -51,14 +50,6 @@ public class AgentDodge : Agent
     public override void Initialize()
     {
         DodgeEnvController envController = GetComponentInParent<DodgeEnvController>();
-        if (envController != null)
-        {
-            m_Existential = 1f / envController.MaxEnvironmentSteps;
-        }
-        else
-        {
-            m_Existential = 1f / MaxStep;
-        }
 
         m_BehaviorParameters = gameObject.GetComponent<BehaviorParameters>();
         if (m_BehaviorParameters.TeamId == (int)DodgeballTeam.Blue)
@@ -139,9 +130,7 @@ public class AgentDodge : Agent
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
-
     {
-        AddReward(-m_Existential);
         MoveAgent(actionBuffers.DiscreteActions);
     }
 
@@ -186,8 +175,16 @@ public class AgentDodge : Agent
         var force = k_Power * m_KickPower;
         if (c.gameObject.CompareTag("ball"))
         {
-            AddReward(.2f * m_BallTouch);
-            if (c.gameObject.GetComponent<Dodgeball>().canpickup == 1)
+            AddReward(0.2f);
+            if (c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.neutral)
+            {
+                pickupball(c.gameObject);
+            }
+            if (gameObject.tag == "blueAgent" && c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.blue)
+            {
+                pickupball(c.gameObject);
+            }
+            if (gameObject.tag == "purpleAgent" && c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.purple)
             {
                 pickupball(c.gameObject);
             }
@@ -216,6 +213,8 @@ public class AgentDodge : Agent
         ball.SetActive(true);
         ball.transform.position = this.transform.position+(transform.forward*2);
         ball.transform.rotation = this.transform.rotation;
+
+        AddReward(0.0625f);
         
         ball.GetComponent<Rigidbody>().AddRelativeForce(new Vector3 (0, 0, 4000f));
         ball.GetComponent<Dodgeball>().area = (GameObject.Find("Game Environment"));
