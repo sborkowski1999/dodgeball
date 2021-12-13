@@ -175,8 +175,16 @@ public class AgentDodge : Agent
         var force = k_Power * m_KickPower;
         if (c.gameObject.CompareTag("ball"))
         {
-            AddReward(0.0625f);
-            if (c.gameObject.GetComponent<Dodgeball>().canpickup == 1)
+            AddReward(0.2f);
+            if (c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.neutral)
+            {
+                pickupball(c.gameObject);
+            }
+            if (gameObject.tag == "blueAgent" && c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.blue)
+            {
+                pickupball(c.gameObject);
+            }
+            if (gameObject.tag == "purpleAgent" && c.gameObject.GetComponent<Dodgeball>().curr_state == Dodgeball.BallState.purple)
             {
                 pickupball(c.gameObject);
             }

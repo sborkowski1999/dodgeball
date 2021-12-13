@@ -11,7 +11,7 @@ public class Dodgeball : MonoBehaviour
         purple = 1,
         blue = 2
     }
-    private BallState curr_state;
+    public BallState curr_state;
     public Material purpleMaterial;
     public Material blueMaterial;
     public Material neutralMat;
@@ -42,6 +42,7 @@ public class Dodgeball : MonoBehaviour
             if(curr_state == BallState.blue) {
                 envController.PlayerHit(DodgeballTeam.Blue, col.gameObject);
                 owner.GetComponent<AgentDodge>().AddReward(1);
+                owner = null;
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.purple);
@@ -53,8 +54,9 @@ public class Dodgeball : MonoBehaviour
         {
 
             if(curr_state == BallState.purple){
-                owner.GetComponent<AgentDodge>().AddReward(1);
                 envController.PlayerHit(DodgeballTeam.Purple, col.gameObject);
+                owner.GetComponent<AgentDodge>().AddReward(1);
+                owner = null;
             }
             else if(curr_state == BallState.neutral) {
                 SetState(BallState.blue);
@@ -73,17 +75,14 @@ public class Dodgeball : MonoBehaviour
             case BallState.blue:
                 curr_state = BallState.blue;
                 GetComponent<Renderer>().material = blueMaterial;
-                canpickup = 0;
                 break;
             case BallState.purple:
                 curr_state = BallState.purple;
                 GetComponent<Renderer>().material = purpleMaterial;
-                canpickup = 0;
                 break;
             case BallState.neutral:
                 curr_state = BallState.neutral;
                 GetComponent<Renderer>().material = neutralMat;
-                canpickup = 1;
                 break;
         }
     }
