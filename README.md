@@ -1,5 +1,19 @@
 # Dodgeball
 
+**Dec 12th, 10pm**
+
+*Note*
+- `Team Id` for all the agents need to be set to 0
+
+*Changes*
+- Allow ball to be picked up if same color as agent or is neutral
+- Remove `canpickup`
+- Check if agent that shot the ball exists before rewarding the shooter
+- Removed group rewards
+- Removed existential rewards
+- Add reward for picking up and shooting ball
+- Add reward for hitting an opponent
+
 **Dec 12th, 1am**
 
 *Side Note*
