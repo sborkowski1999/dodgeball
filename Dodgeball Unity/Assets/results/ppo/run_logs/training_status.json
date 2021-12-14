@@ -1,0 +1,65 @@
+{
+    "Dodgeball": {
+        "checkpoints": [
+            {
+                "steps": 3999965,
+                "file_path": "results/ppo/Dodgeball/Dodgeball-3999965.onnx",
+                "reward": 1.6749999523162842,
+                "creation_time": 1639375428.9362931,
+                "auxillary_file_paths": [
+                    "results/ppo/Dodgeball/Dodgeball-3999965.pt"
+                ]
+            },
+            {
+                "steps": 4499946,
+                "file_path": "results/ppo/Dodgeball/Dodgeball-4499946.onnx",
+                "reward": null,
+                "creation_time": 1639375665.41914,
+                "auxillary_file_paths": [
+                    "results/ppo/Dodgeball/Dodgeball-4499946.pt"
+                ]
+            },
+            {
+                "steps": 4999936,
+                "file_path": "results/ppo/Dodgeball/Dodgeball-4999936.onnx",
+                "reward": 9.606249697506428,
+                "creation_time": 1639375946.7806861,
+                "auxillary_file_paths": [
+                    "results/ppo/Dodgeball/Dodgeball-4999936.pt"
+                ]
+            },
+            {
+                "steps": 5499967,
+                "file_path": "results/ppo/Dodgeball/Dodgeball-5499967.onnx",
+                "reward": 10.812499895691872,
+                "creation_time": 1639376179.745845,
+                "auxillary_file_paths": [
+                    "results/ppo/Dodgeball/Dodgeball-5499967.pt"
+                ]
+            },
+            {
+                "steps": 5899512,
+                "file_path": "results/ppo/Dodgeball/Dodgeball-5899512.onnx",
+                "reward": null,
+                "creation_time": 1639376376.602463,
+                "auxillary_file_paths": [
+                    "results/ppo/Dodgeball/Dodgeball-5899512.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 5899512,
+            "file_path": "results/ppo/Dodgeball.onnx",
+            "reward": null,
+            "creation_time": 1639376376.602463,
+            "auxillary_file_paths": [
+                "results/ppo/Dodgeball/Dodgeball-5899512.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.27.0",
+        "torch_version": "1.8.0.post3"
+    }
+}
